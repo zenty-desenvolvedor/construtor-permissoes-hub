@@ -243,7 +243,8 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC<{children: ReactNode}> = ({ children }) => {
+// Fixed: Make sure this is a proper React function component
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [authState, setAuthState] = useState<AuthState>(() => {
     // Check for saved auth state in localStorage
     const savedAuth = localStorage.getItem('authState');
