@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -11,12 +10,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/services/api';
 import { Plus } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { User } from '@/types';
 import { UsersTable } from './components/UsersTable';
 import { DeleteUserDialog } from './components/DeleteUserDialog';
+import { userService } from '@/services/userService';
 
 export default function UserManagement() {
   const { hasPermission } = useAuth();
@@ -27,7 +26,7 @@ export default function UserManagement() {
 
   const { data: users, refetch: refetchUsers } = useQuery({
     queryKey: ['users'],
-    queryFn: api.getUsers,
+    queryFn: userService.getUsers,
   });
 
   const canCreate = hasPermission('1', 'create');
@@ -53,12 +52,9 @@ export default function UserManagement() {
     try {
       setIsLoading(true);
       if (selectedUser) {
-        await api.updateUser({
-          ...data,
-          id: selectedUser.id
-        });
+        await userService.updateUser(selectedUser.id, data);
       } else {
-        await api.createUser(data);
+        await userService.createUser(data);
       }
       handleCloseDialog();
       refetchUsers();
@@ -78,7 +74,7 @@ export default function UserManagement() {
     try {
       if (!selectedUser) return;
 
-      await api.deleteUser(selectedUser.id);
+      await userService.deleteUser(selectedUser.id);
       toast({
         title: 'Usuário excluído',
         description: `O usuário ${selectedUser.fullName} foi excluído com sucesso.`,
