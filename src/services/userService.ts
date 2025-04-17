@@ -5,7 +5,9 @@ import { UserFormData } from "@/components/users/schemas/userFormSchema";
 
 export const userService = {
   async createUser(data: UserFormData) {
-    const { error } = await supabase
+    console.log("Creating user with data:", data);
+    
+    const { data: insertedData, error } = await supabase
       .from('usuarios')
       .insert({
         nome_completo: data.fullName,
@@ -13,9 +15,16 @@ export const userService = {
         email: data.email,
         senha_hash: data.password, // In a real app, this should be hashed
         tipo_usuario_id: data.userTypeId
-      });
+      })
+      .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+    
+    console.log("User created successfully:", insertedData);
+    return insertedData;
   },
 
   async updateUser(userId: string, data: UserFormData) {
@@ -31,12 +40,18 @@ export const userService = {
       updateData.senha_hash = data.password;
     }
 
-    const { error } = await supabase
+    const { data: updatedData, error } = await supabase
       .from('usuarios')
       .update(updateData)
-      .eq('id', userId);
+      .eq('id', userId)
+      .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error updating user:", error);
+      throw error;
+    }
+    
+    return updatedData;
   },
 
   async deleteUser(userId: string) {
@@ -45,7 +60,10 @@ export const userService = {
       .delete()
       .eq('id', userId);
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error deleting user:", error);
+      throw error;
+    }
   },
 
   async getUsers() {
@@ -59,7 +77,11 @@ export const userService = {
         )
       `);
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching users:", error);
+      throw error;
+    }
+    
     return data.map(user => ({
       id: user.id,
       fullName: user.nome_completo,

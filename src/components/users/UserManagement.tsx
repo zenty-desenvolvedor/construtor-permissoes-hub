@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ export default function UserManagement() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const { data: users, refetch: refetchUsers } = useQuery({
+  const { data: users, refetch: refetchUsers, isLoading: isLoadingUsers } = useQuery({
     queryKey: ['users'],
     queryFn: userService.getUsers,
   });
@@ -51,19 +52,30 @@ export default function UserManagement() {
   const handleSubmit = async (data: any) => {
     try {
       setIsLoading(true);
+      console.log("Submitting user data:", data);
+      
       if (selectedUser) {
         await userService.updateUser(selectedUser.id, data);
+        toast({
+          title: 'Usuário atualizado',
+          description: 'O usuário foi atualizado com sucesso.',
+        });
       } else {
         await userService.createUser(data);
+        toast({
+          title: 'Usuário cadastrado',
+          description: 'O usuário foi criado com sucesso.',
+        });
       }
+      
       handleCloseDialog();
-      refetchUsers();
+      await refetchUsers(); // Importante: recarregar a lista de usuários
     } catch (error) {
       console.error('Error saving user:', error);
       toast({
         variant: 'destructive',
         title: 'Erro ao salvar',
-        description: 'Não foi possível salvar o usuário.',
+        description: 'Não foi possível salvar o usuário. Verifique os logs para mais detalhes.',
       });
     } finally {
       setIsLoading(false);
@@ -73,8 +85,10 @@ export default function UserManagement() {
   const handleDelete = async () => {
     try {
       if (!selectedUser) return;
-
+      
+      setIsLoading(true);
       await userService.deleteUser(selectedUser.id);
+      
       toast({
         title: 'Usuário excluído',
         description: `O usuário ${selectedUser.fullName} foi excluído com sucesso.`,
@@ -82,7 +96,7 @@ export default function UserManagement() {
 
       setDeleteDialogOpen(false);
       setSelectedUser(null);
-      refetchUsers();
+      await refetchUsers(); // Importante: recarregar a lista de usuários
     } catch (error) {
       console.error('Error deleting user:', error);
       toast({
@@ -90,6 +104,8 @@ export default function UserManagement() {
         title: 'Erro ao excluir',
         description: 'Não foi possível excluir o usuário.',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,7 +135,7 @@ export default function UserManagement() {
       <div className="border rounded-lg">
         <UsersTable
           users={users}
-          isLoading={isLoading}
+          isLoading={isLoadingUsers}
           canEdit={canEdit}
           canDelete={canDelete}
           canManagePermissions={canManagePermissions}
