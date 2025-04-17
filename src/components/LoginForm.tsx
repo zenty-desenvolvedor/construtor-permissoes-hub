@@ -96,9 +96,9 @@ const LoginForm = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 gap-2 text-xs text-muted-foreground">
-            <div>admin@example.com / password (Administrador)</div>
-            <div>vendedor@example.com / password (Vendedor)</div>
-            <div>cliente@example.com / password (Cliente)</div>
+            <div>admin@exemplo.com / admin123 (Administrador)</div>
+            <div>vendedor@exemplo.com / password (Vendedor)</div>
+            <div>cliente@exemplo.com / password (Cliente)</div>
           </div>
         </CardContent>
         

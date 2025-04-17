@@ -9,13 +9,13 @@ const mockLogin = async (credentials: LoginCredentials) => {
   console.log('Login attempt with:', credentials);
   
   // Simulate API response - in a real app this would come from backend
-  if (credentials.email === 'admin@example.com' && credentials.password === 'password') {
+  if (credentials.email === 'admin@exemplo.com' && credentials.password === 'admin123') {
     return {
       user: {
         id: '1',
-        fullName: 'Admin User',
+        fullName: 'Administrador do Sistema',
         username: 'admin',
-        email: 'admin@example.com',
+        email: 'admin@exemplo.com',
         userTypeId: '1',
         userType: {
           id: '1',
@@ -58,13 +58,13 @@ const mockLogin = async (credentials: LoginCredentials) => {
         }
       ]
     };
-  } else if (credentials.email === 'vendedor@example.com' && credentials.password === 'password') {
+  } else if (credentials.email === 'vendedor@exemplo.com' && credentials.password === 'password') {
     return {
       user: {
         id: '2',
         fullName: 'Vendedor',
         username: 'vendedor',
-        email: 'vendedor@example.com',
+        email: 'vendedor@exemplo.com',
         userTypeId: '2',
         userType: {
           id: '2',
@@ -91,13 +91,13 @@ const mockLogin = async (credentials: LoginCredentials) => {
         }
       ]
     };
-  } else if (credentials.email === 'cliente@example.com' && credentials.password === 'password') {
+  } else if (credentials.email === 'cliente@exemplo.com' && credentials.password === 'password') {
     return {
       user: {
         id: '3',
         fullName: 'Cliente',
         username: 'cliente',
-        email: 'cliente@example.com',
+        email: 'cliente@exemplo.com',
         userTypeId: '3',
         userType: {
           id: '3',
