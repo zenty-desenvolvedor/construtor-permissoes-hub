@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { LoginCredentials } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const LoginForm = () => {
   const [credentials, setCredentials] = useState<LoginCredentials>({
@@ -26,10 +28,25 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Try to authenticate with our mockup first
       await login(credentials);
+      
+      // Later we can implement Supabase authentication here:
+      // const { error } = await supabase.auth.signInWithPassword({
+      //   email: credentials.email,
+      //   password: credentials.password,
+      // });
+      //
+      // if (error) throw error;
+      
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
+      toast({
+        variant: "destructive",
+        title: "Erro de autenticação",
+        description: "Email ou senha inválidos.",
+      });
     }
   };
 

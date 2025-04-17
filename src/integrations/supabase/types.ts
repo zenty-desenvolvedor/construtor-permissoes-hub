@@ -9,7 +9,116 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      modulos: {
+        Row: {
+          id: string
+          nome_modulo: string
+        }
+        Insert: {
+          id?: string
+          nome_modulo: string
+        }
+        Update: {
+          id?: string
+          nome_modulo?: string
+        }
+        Relationships: []
+      }
+      permissoes: {
+        Row: {
+          id: string
+          modulo_id: string
+          pode_acessar: boolean
+          pode_cadastrar: boolean
+          pode_editar: boolean
+          pode_excluir: boolean
+          tipo_usuario_id: string
+        }
+        Insert: {
+          id?: string
+          modulo_id: string
+          pode_acessar?: boolean
+          pode_cadastrar?: boolean
+          pode_editar?: boolean
+          pode_excluir?: boolean
+          tipo_usuario_id: string
+        }
+        Update: {
+          id?: string
+          modulo_id?: string
+          pode_acessar?: boolean
+          pode_cadastrar?: boolean
+          pode_editar?: boolean
+          pode_excluir?: boolean
+          tipo_usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permissoes_modulo_id_fkey"
+            columns: ["modulo_id"]
+            isOneToOne: false
+            referencedRelation: "modulos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permissoes_tipo_usuario_id_fkey"
+            columns: ["tipo_usuario_id"]
+            isOneToOne: false
+            referencedRelation: "tipos_usuario"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tipos_usuario: {
+        Row: {
+          id: string
+          nome_tipo: string
+        }
+        Insert: {
+          id?: string
+          nome_tipo: string
+        }
+        Update: {
+          id?: string
+          nome_tipo?: string
+        }
+        Relationships: []
+      }
+      usuarios: {
+        Row: {
+          email: string
+          id: string
+          nome_completo: string
+          nome_usuario: string
+          senha_hash: string
+          tipo_usuario_id: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          nome_completo: string
+          nome_usuario: string
+          senha_hash: string
+          tipo_usuario_id: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          nome_completo?: string
+          nome_usuario?: string
+          senha_hash?: string
+          tipo_usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usuarios_tipo_usuario_id_fkey"
+            columns: ["tipo_usuario_id"]
+            isOneToOne: false
+            referencedRelation: "tipos_usuario"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
