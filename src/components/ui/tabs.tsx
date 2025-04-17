@@ -22,29 +22,44 @@ const TabsList = React.forwardRef<
 ))
 TabsList.displayName = TabsPrimitive.List.displayName
 
+interface TabsTriggerProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
+  to?: string
+}
+
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
-    to?: string
-  }
+  TabsTriggerProps
 >(({ className, to, ...props }, ref) => {
   const location = useLocation()
   const isActive = to ? location.pathname === to : false
 
-  const Comp = to ? Link : TabsPrimitive.Trigger
-  const compProps = to ? { to } : {}
+  if (to) {
+    return (
+      <Link
+        to={to}
+        className={cn(
+          "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          isActive
+            ? "bg-background text-foreground shadow-sm"
+            : "hover:bg-muted/50 hover:text-muted-foreground",
+          className
+        )}
+      >
+        {props.children}
+      </Link>
+    )
+  }
 
   return (
-    <Comp
+    <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
         "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-        isActive || (!to && props["data-state"] === "active") 
-          ? "bg-background text-foreground shadow-sm" 
+        (!to && props["data-state"] === "active")
+          ? "bg-background text-foreground shadow-sm"
           : "hover:bg-muted/50 hover:text-muted-foreground",
         className
       )}
-      {...compProps}
       {...props}
     />
   )

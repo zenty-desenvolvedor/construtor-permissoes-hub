@@ -14,9 +14,11 @@ import {
   Settings, 
   ShoppingCart 
 } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const ModuleTabs = () => {
   const { hasPermission } = useAuth();
+  const location = useLocation();
   
   const modules = [
     { id: "dashboard", name: "Dashboard", icon: <LayoutDashboard size={16} />, path: "/dashboard" },
@@ -37,13 +39,18 @@ const ModuleTabs = () => {
     module.id === "dashboard" || hasPermission(module.id, 'access')
   );
 
+  // Determine the current active tab
+  const currentPath = location.pathname;
+  const activeModule = accessibleModules.find(module => module.path === currentPath) || accessibleModules[0];
+
   return (
     <div className="w-full px-4 py-2 border-b bg-background">
-      <Tabs defaultValue="dashboard" className="w-full">
+      <Tabs defaultValue={activeModule.id} className="w-full">
         <TabsList className="w-full justify-start">
           {accessibleModules.map((module) => (
             <TabsTrigger 
-              key={module.id} 
+              key={module.id}
+              value={module.id}
               to={module.path}
               className="flex items-center gap-1"
             >
