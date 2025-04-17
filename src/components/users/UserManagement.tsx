@@ -10,29 +10,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
-import { Plus, Pencil, Trash } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { User } from '@/types';
+import { UsersTable } from './components/UsersTable';
+import { DeleteUserDialog } from './components/DeleteUserDialog';
 
 export default function UserManagement() {
   const { hasPermission } = useAuth();
@@ -49,6 +33,7 @@ export default function UserManagement() {
   const canCreate = hasPermission('1', 'create');
   const canEdit = hasPermission('1', 'edit');
   const canDelete = hasPermission('1', 'delete');
+  const canManagePermissions = hasPermission('4', 'access');
 
   const handleOpenDialog = (user?: User) => {
     if (user) {
@@ -64,16 +49,10 @@ export default function UserManagement() {
     setSelectedUser(null);
   };
 
-  const handleOpenDeleteDialog = (user: User) => {
-    setSelectedUser(user);
-    setDeleteDialogOpen(true);
-  };
-
   const handleSubmit = async (data: any) => {
     try {
       setIsLoading(true);
       if (selectedUser) {
-        // Garantir que estamos enviando o ID ao atualizar
         await api.updateUser({
           ...data,
           id: selectedUser.id
@@ -142,64 +121,18 @@ export default function UserManagement() {
       </div>
 
       <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Usuário</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  Carregando usuários...
-                </TableCell>
-              </TableRow>
-            ) : users?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  Nenhum usuário encontrado
-                </TableCell>
-              </TableRow>
-            ) : (
-              users?.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.fullName}</TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.userType?.typeName}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      {canEdit && (
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleOpenDialog(user)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      )}
-                      {canDelete && (
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="text-construction-danger hover:text-white hover:bg-construction-danger"
-                          onClick={() => handleOpenDeleteDialog(user)}
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+        <UsersTable
+          users={users}
+          isLoading={isLoading}
+          canEdit={canEdit}
+          canDelete={canDelete}
+          canManagePermissions={canManagePermissions}
+          onEdit={handleOpenDialog}
+          onDelete={(user) => {
+            setSelectedUser(user);
+            setDeleteDialogOpen(true);
+          }}
+        />
       </div>
 
       {/* Create/Edit Dialog */}
@@ -220,26 +153,12 @@ export default function UserManagement() {
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Excluir Usuário</AlertDialogTitle>
-            <AlertDialogDescription>
-              Tem certeza que deseja excluir o usuário "{selectedUser?.fullName}"?
-              Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-construction-danger hover:bg-red-600"
-              onClick={handleDelete}
-            >
-              Excluir
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteUserDialog
+        open={deleteDialogOpen}
+        user={selectedUser}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }
