@@ -110,6 +110,7 @@ export const api = {
     return newUser;
   },
   
+  // Updated: Changed the signature to accept a User object with ID included
   updateUser: async (user: User) => {
     await new Promise(resolve => setTimeout(resolve, 500));
     const index = mockUsers.findIndex(u => u.id === user.id);
