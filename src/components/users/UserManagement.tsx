@@ -73,8 +73,11 @@ export default function UserManagement() {
     try {
       setIsLoading(true);
       if (selectedUser) {
-        // Fixed: Updating the function call to match the API signature
-        await api.updateUser(data);
+        // Garantir que estamos enviando o ID ao atualizar
+        await api.updateUser({
+          ...data,
+          id: selectedUser.id
+        });
       } else {
         await api.createUser(data);
       }

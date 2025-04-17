@@ -11,6 +11,7 @@ import { UsernameField } from './form-fields/UsernameField';
 import { EmailField } from './form-fields/EmailField';
 import { PasswordField } from './form-fields/PasswordField';
 import { UserTypeField } from './form-fields/UserTypeField';
+import { useEffect } from 'react';
 
 interface UserFormProps {
   user?: User;
@@ -29,9 +30,19 @@ export function UserForm({ user, onSubmit }: UserFormProps) {
     },
   });
 
+  // Debugging
+  useEffect(() => {
+    console.log("Form values:", form.watch());
+    console.log("Form errors:", form.formState.errors);
+  }, [form.watch(), form.formState.errors]);
+
   const handleSubmit = async (data: UserFormData) => {
     try {
-      await onSubmit(data);
+      // Adicione o ID do usuário aos dados se estiver editando
+      const submitData = user ? { ...data, id: user.id } : data;
+      
+      console.log("Submitting data:", submitData);
+      await onSubmit(submitData);
       form.reset();
       toast({
         title: user ? 'Usuário atualizado' : 'Usuário criado',
