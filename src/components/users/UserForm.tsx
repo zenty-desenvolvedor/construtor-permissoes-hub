@@ -1,39 +1,16 @@
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/services/api';
 import { toast } from '@/components/ui/use-toast';
 import { User } from '@/types';
-
-const userFormSchema = z.object({
-  fullName: z.string().min(3, 'Nome completo deve ter no mínimo 3 caracteres'),
-  username: z.string().min(3, 'Nome de usuário deve ter no mínimo 3 caracteres'),
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
-  userTypeId: z.string().uuid('Tipo de usuário é obrigatório'),
-});
-
-type UserFormData = z.infer<typeof userFormSchema>;
+import { userFormSchema, UserFormData } from './schemas/userFormSchema';
+import { FullNameField } from './form-fields/FullNameField';
+import { UsernameField } from './form-fields/UsernameField';
+import { EmailField } from './form-fields/EmailField';
+import { PasswordField } from './form-fields/PasswordField';
+import { UserTypeField } from './form-fields/UserTypeField';
 
 interface UserFormProps {
   user?: User;
@@ -50,11 +27,6 @@ export function UserForm({ user, onSubmit }: UserFormProps) {
       password: '',
       userTypeId: user?.userTypeId || '',
     },
-  });
-
-  const { data: userTypes, isLoading: isLoadingUserTypes } = useQuery({
-    queryKey: ['userTypes'],
-    queryFn: api.getUserTypes,
   });
 
   const handleSubmit = async (data: UserFormData) => {
@@ -80,95 +52,11 @@ export function UserForm({ user, onSubmit }: UserFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome Completo</FormLabel>
-              <FormControl>
-                <Input placeholder="Digite o nome completo" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome de Usuário</FormLabel>
-              <FormControl>
-                <Input placeholder="Digite o nome de usuário" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="Digite o email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{user ? 'Nova Senha' : 'Senha'}</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder={user ? 'Digite a nova senha' : 'Digite a senha'}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="userTypeId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tipo de Usuário</FormLabel>
-              <Select
-                disabled={isLoadingUserTypes}
-                onValueChange={field.onChange}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o tipo de usuário" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {userTypes?.map((type) => (
-                    <SelectItem key={type.id} value={type.id}>
-                      {type.typeName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
+        <FullNameField form={form} />
+        <UsernameField form={form} />
+        <EmailField form={form} />
+        <PasswordField form={form} user={user} />
+        <UserTypeField form={form} />
         <Button type="submit" className="w-full">
           {user ? 'Atualizar' : 'Cadastrar'} Usuário
         </Button>
