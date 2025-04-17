@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import Dashboard from "./components/Dashboard";
 import ModuleManagement from "./components/modules/ModuleManagement";
 import UserTypeManagement from "./components/users/UserTypeManagement";
 import PermissionManagement from "./components/permissions/PermissionManagement";
+import UserManagement from "./components/users/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +69,12 @@ const PermissionsPage = () => (
   </ProtectedRoute>
 );
 
+const UserManagement = () => (
+  <ProtectedRoute moduleId="1">
+    <UserManagement />
+  </ProtectedRoute>
+);
+
 // Placeholder pages for new modules
 const PlaceholderPage = ({ title, moduleId, description }: { title: string; moduleId: string; description?: string }) => (
   <ProtectedRoute moduleId={moduleId}>
@@ -95,7 +101,7 @@ const App = () => (
             <Route path="/modulos" element={<ModulesPage />} />
             <Route path="/tipos-usuario" element={<UserTypesPage />} />
             <Route path="/permissoes" element={<PermissionsPage />} />
-            <Route path="/usuarios" element={<PlaceholderPage title="Usuários" moduleId="1" description="Gerenciamento de usuários do sistema" />} />
+            <Route path="/usuarios" element={<UserManagement />} />
             <Route path="/produtos" element={<PlaceholderPage title="Produtos" moduleId="products" description="Cadastro e gestão de produtos" />} />
             <Route path="/servicos" element={<PlaceholderPage title="Serviços" moduleId="services" description="Cadastro e gestão de serviços" />} />
             <Route path="/vendas" element={<PlaceholderPage title="Vendas" moduleId="5" description="Gerenciamento de vendas e orçamentos" />} />
