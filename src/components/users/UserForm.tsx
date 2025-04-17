@@ -12,13 +12,15 @@ import { EmailField } from './form-fields/EmailField';
 import { PasswordField } from './form-fields/PasswordField';
 import { UserTypeField } from './form-fields/UserTypeField';
 import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface UserFormProps {
   user?: User;
   onSubmit: (data: UserFormData) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function UserForm({ user, onSubmit }: UserFormProps) {
+export function UserForm({ user, onSubmit, isLoading = false }: UserFormProps) {
   const form = useForm<UserFormData>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
@@ -38,18 +40,11 @@ export function UserForm({ user, onSubmit }: UserFormProps) {
 
   const handleSubmit = async (data: UserFormData) => {
     try {
-      // Adicione o ID do usuário aos dados se estiver editando
+      // Add the ID of the user to the data if editing
       const submitData = user ? { ...data, id: user.id } : data;
       
       console.log("Submitting data:", submitData);
       await onSubmit(submitData);
-      form.reset();
-      toast({
-        title: user ? 'Usuário atualizado' : 'Usuário criado',
-        description: user
-          ? 'O usuário foi atualizado com sucesso'
-          : 'O usuário foi criado com sucesso',
-      });
     } catch (error) {
       console.error('Error submitting user form:', error);
       toast({
@@ -68,8 +63,19 @@ export function UserForm({ user, onSubmit }: UserFormProps) {
         <EmailField form={form} />
         <PasswordField form={form} user={user} />
         <UserTypeField form={form} />
-        <Button type="submit" className="w-full">
-          {user ? 'Atualizar' : 'Cadastrar'} Usuário
+        <Button 
+          type="submit" 
+          className="w-full" 
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {user ? 'Atualizando...' : 'Cadastrando...'}
+            </>
+          ) : (
+            user ? 'Atualizar Usuário' : 'Cadastrar Usuário'
+          )}
         </Button>
       </form>
     </Form>

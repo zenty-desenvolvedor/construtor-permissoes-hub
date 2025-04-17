@@ -11,7 +11,7 @@ interface UserTypeFieldProps {
 }
 
 export function UserTypeField({ form }: UserTypeFieldProps) {
-  const { data: userTypes, isLoading: isLoadingUserTypes } = useQuery({
+  const { data: userTypes = [], isLoading: isLoadingUserTypes } = useQuery({
     queryKey: ['userTypes'],
     queryFn: userService.getUserTypes,
   });
@@ -27,7 +27,7 @@ export function UserTypeField({ form }: UserTypeFieldProps) {
             disabled={isLoadingUserTypes}
             onValueChange={field.onChange}
             defaultValue={field.value}
-            value={field.value}
+            value={field.value || ""}
           >
             <FormControl>
               <SelectTrigger>
@@ -35,7 +35,7 @@ export function UserTypeField({ form }: UserTypeFieldProps) {
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {userTypes?.map((type) => (
+              {userTypes.map((type) => (
                 <SelectItem key={type.id} value={type.id}>
                   {type.typeName}
                 </SelectItem>

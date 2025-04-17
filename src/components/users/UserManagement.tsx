@@ -25,7 +25,7 @@ export default function UserManagement() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const { data: users, refetch: refetchUsers, isLoading: isLoadingUsers } = useQuery({
+  const { data: users = [], refetch: refetchUsers, isLoading: isLoadingUsers } = useQuery({
     queryKey: ['users'],
     queryFn: userService.getUsers,
   });
@@ -69,13 +69,13 @@ export default function UserManagement() {
       }
       
       handleCloseDialog();
-      await refetchUsers(); // Importante: recarregar a lista de usuários
-    } catch (error) {
+      await refetchUsers(); // Important: reload the user list
+    } catch (error: any) {
       console.error('Error saving user:', error);
       toast({
         variant: 'destructive',
         title: 'Erro ao salvar',
-        description: 'Não foi possível salvar o usuário. Verifique os logs para mais detalhes.',
+        description: error.message || 'Não foi possível salvar o usuário. Verifique os logs para mais detalhes.',
       });
     } finally {
       setIsLoading(false);
@@ -96,13 +96,13 @@ export default function UserManagement() {
 
       setDeleteDialogOpen(false);
       setSelectedUser(null);
-      await refetchUsers(); // Importante: recarregar a lista de usuários
-    } catch (error) {
+      await refetchUsers(); // Important: reload the user list
+    } catch (error: any) {
       console.error('Error deleting user:', error);
       toast({
         variant: 'destructive',
         title: 'Erro ao excluir',
-        description: 'Não foi possível excluir o usuário.',
+        description: error.message || 'Não foi possível excluir o usuário.',
       });
     } finally {
       setIsLoading(false);
@@ -160,7 +160,7 @@ export default function UserManagement() {
                 : 'Preencha as informações para criar um novo usuário.'}
             </DialogDescription>
           </DialogHeader>
-          <UserForm user={selectedUser} onSubmit={handleSubmit} />
+          <UserForm user={selectedUser} onSubmit={handleSubmit} isLoading={isLoading} />
         </DialogContent>
       </Dialog>
 
@@ -170,6 +170,7 @@ export default function UserManagement() {
         user={selectedUser}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleDelete}
+        isLoading={isLoading}
       />
     </div>
   );
