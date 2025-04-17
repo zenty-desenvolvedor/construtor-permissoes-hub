@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -69,7 +70,7 @@ const PermissionsPage = () => (
   </ProtectedRoute>
 );
 
-const UserManagement = () => (
+const UserManagementPage = () => (
   <ProtectedRoute moduleId="1">
     <UserManagement />
   </ProtectedRoute>
@@ -101,7 +102,7 @@ const App = () => (
             <Route path="/modulos" element={<ModulesPage />} />
             <Route path="/tipos-usuario" element={<UserTypesPage />} />
             <Route path="/permissoes" element={<PermissionsPage />} />
-            <Route path="/usuarios" element={<UserManagement />} />
+            <Route path="/usuarios" element={<UserManagementPage />} />
             <Route path="/produtos" element={<PlaceholderPage title="Produtos" moduleId="products" description="Cadastro e gestão de produtos" />} />
             <Route path="/servicos" element={<PlaceholderPage title="Serviços" moduleId="services" description="Cadastro e gestão de serviços" />} />
             <Route path="/vendas" element={<PlaceholderPage title="Vendas" moduleId="5" description="Gerenciamento de vendas e orçamentos" />} />
