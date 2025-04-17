@@ -55,6 +55,86 @@ const mockLogin = async (credentials: LoginCredentials) => {
           canCreate: true,
           canEdit: true,
           canDelete: true
+        },
+        {
+          moduleId: '5',
+          moduleName: 'Vendas',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: '6',
+          moduleName: 'Pedidos',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'products',
+          moduleName: 'Produtos',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'services',
+          moduleName: 'Serviços',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'clients',
+          moduleName: 'Clientes',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'suppliers',
+          moduleName: 'Fornecedores',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'financial',
+          moduleName: 'Financeiro',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'reports',
+          moduleName: 'Relatórios',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'settings',
+          moduleName: 'Configurações',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
+        },
+        {
+          moduleId: 'client-area',
+          moduleName: 'Área do Cliente',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: true
         }
       ]
     };
@@ -88,6 +168,22 @@ const mockLogin = async (credentials: LoginCredentials) => {
           canCreate: true,
           canEdit: true,
           canDelete: false
+        },
+        {
+          moduleId: 'products',
+          moduleName: 'Produtos',
+          canAccess: true,
+          canCreate: false,
+          canEdit: false,
+          canDelete: false
+        },
+        {
+          moduleId: 'clients',
+          moduleName: 'Clientes',
+          canAccess: true,
+          canCreate: true,
+          canEdit: true,
+          canDelete: false
         }
       ]
     };
@@ -111,6 +207,14 @@ const mockLogin = async (credentials: LoginCredentials) => {
           moduleName: 'Pedidos',
           canAccess: true,
           canCreate: true,
+          canEdit: false,
+          canDelete: false
+        },
+        {
+          moduleId: 'client-area',
+          moduleName: 'Área do Cliente',
+          canAccess: true,
+          canCreate: false,
           canEdit: false,
           canDelete: false
         }

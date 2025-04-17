@@ -15,7 +15,13 @@ import {
   Package, 
   Users2, 
   Menu, 
-  X 
+  X,
+  Wrench,
+  Receipt,
+  Factory,
+  Wallet,
+  BarChart2, 
+  User
 } from 'lucide-react';
 
 interface NavItemProps {
@@ -29,7 +35,7 @@ interface NavItemProps {
 const NavItem = ({ to, icon, label, moduleId, collapsed }: NavItemProps) => {
   const { hasPermission } = useAuth();
   
-  if (!hasPermission(moduleId, 'access')) {
+  if (!hasPermission(moduleId, 'access') && moduleId !== "dashboard") {
     return null;
   }
   
@@ -71,13 +77,20 @@ export default function Sidebar() {
   
   const navItems = [
     { to: "/dashboard", icon: <LayoutDashboard size={20} />, label: "Dashboard", moduleId: "dashboard" },
-    { to: "/usuarios", icon: <Users size={20} />, label: "Usuários", moduleId: "1" },
+    { to: "/produtos", icon: <Package size={20} />, label: "Produtos", moduleId: "products" },
+    { to: "/servicos", icon: <Wrench size={20} />, label: "Serviços", moduleId: "services" },
+    { to: "/vendas", icon: <Receipt size={20} />, label: "Vendas", moduleId: "5" },
+    { to: "/clientes", icon: <Users size={20} />, label: "Clientes", moduleId: "clients" },
+    { to: "/fornecedores", icon: <Factory size={20} />, label: "Fornecedores", moduleId: "suppliers" },
+    { to: "/usuarios", icon: <User size={20} />, label: "Usuários", moduleId: "1" },
+    { to: "/financeiro", icon: <Wallet size={20} />, label: "Financeiro", moduleId: "financial" },
+    { to: "/relatorios", icon: <BarChart2 size={20} />, label: "Relatórios", moduleId: "reports" },
     { to: "/tipos-usuario", icon: <Users2 size={20} />, label: "Tipos de Usuário", moduleId: "2" },
     { to: "/modulos", icon: <List size={20} />, label: "Módulos", moduleId: "3" },
     { to: "/permissoes", icon: <LockKeyhole size={20} />, label: "Permissões", moduleId: "4" },
-    { to: "/vendas", icon: <ShoppingCart size={20} />, label: "Vendas", moduleId: "5" },
-    { to: "/pedidos", icon: <Package size={20} />, label: "Pedidos", moduleId: "6" },
-    { to: "/configuracoes", icon: <Settings size={20} />, label: "Configurações", moduleId: "settings" }
+    { to: "/pedidos", icon: <ShoppingCart size={20} />, label: "Pedidos", moduleId: "6" },
+    { to: "/configuracoes", icon: <Settings size={20} />, label: "Configurações", moduleId: "settings" },
+    { to: "/area-cliente", icon: <Users size={20} />, label: "Área do Cliente", moduleId: "client-area" }
   ];
   
   return (
