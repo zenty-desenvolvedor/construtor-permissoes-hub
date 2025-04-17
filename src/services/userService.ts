@@ -7,6 +7,12 @@ export const userService = {
   async createUser(data: UserFormData) {
     console.log("Creating user with data:", data);
     
+    // Validate that userTypeId is a valid UUID format
+    if (!data.userTypeId || !isValidUUID(data.userTypeId)) {
+      console.error("Invalid userTypeId format:", data.userTypeId);
+      throw new Error(`Invalid user type ID format. Expected UUID, got: ${data.userTypeId}`);
+    }
+    
     const { data: insertedData, error } = await supabase
       .from('usuarios')
       .insert({
@@ -28,6 +34,12 @@ export const userService = {
   },
 
   async updateUser(userId: string, data: UserFormData) {
+    // Validate that userTypeId is a valid UUID format
+    if (!data.userTypeId || !isValidUUID(data.userTypeId)) {
+      console.error("Invalid userTypeId format:", data.userTypeId);
+      throw new Error(`Invalid user type ID format. Expected UUID, got: ${data.userTypeId}`);
+    }
+    
     const updateData: any = {
       nome_completo: data.fullName,
       nome_usuario: data.username,
@@ -93,5 +105,27 @@ export const userService = {
         typeName: user.userType.nome_tipo
       } : undefined
     }));
+  },
+  
+  async getUserTypes() {
+    const { data, error } = await supabase
+      .from('tipos_usuario')
+      .select('*');
+      
+    if (error) {
+      console.error("Error fetching user types:", error);
+      throw error;
+    }
+    
+    return data.map(type => ({
+      id: type.id,
+      typeName: type.nome_tipo
+    }));
   }
 };
+
+// Helper function to validate UUID format
+function isValidUUID(uuid: string): boolean {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+}

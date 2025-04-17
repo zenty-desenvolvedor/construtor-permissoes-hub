@@ -4,7 +4,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { UserFormData } from '../schemas/userFormSchema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/services/api';
+import { userService } from '@/services/userService';
 
 interface UserTypeFieldProps {
   form: UseFormReturn<UserFormData>;
@@ -13,7 +13,7 @@ interface UserTypeFieldProps {
 export function UserTypeField({ form }: UserTypeFieldProps) {
   const { data: userTypes, isLoading: isLoadingUserTypes } = useQuery({
     queryKey: ['userTypes'],
-    queryFn: api.getUserTypes,
+    queryFn: userService.getUserTypes,
   });
 
   return (
